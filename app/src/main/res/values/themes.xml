@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.Eventorias" parent="android:Theme.Material.NoActionBar">
+        <item name="android:windowBackground">#FF2B2B2B</item>
+        <item name="android:statusBarColor">#FF2B2B2B</item>
+        <item name="android:navigationBarColor">#FF2B2B2B</item>
+    </style>
+
+    <style name="Theme.Eventorias.Splash" parent="Theme.Eventorias">
+        <item name="android:windowBackground">@drawable/splash_background</item>
+    </style>
+
+</resources>
