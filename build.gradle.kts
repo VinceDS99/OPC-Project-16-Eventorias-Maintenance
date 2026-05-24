@@ -13,16 +13,9 @@ sonar {
         property("sonar.projectKey",   "VinceDS99_OPC-Project-16-Eventorias-Maintenance")
         property("sonar.organization", "vinceds99")
         property("sonar.host.url",     "https://sonarcloud.io")
-        property("sonar.sources",      "src/main/java")
-        property("sonar.tests",        "src/test/java,src/androidTest/java")
         property(
             "sonar.coverage.jacoco.xmlReportPaths",
             "${project.projectDir}/app/build/reports/jacoco/jacocoTestReport/jacocoTestReport.xml"
-        )
-        property(
-            "sonar.exclusions",
-            "**/R.class,**/R\$*.class,**/BuildConfig.*,**/Manifest*.*," +
-                    "**/*_HiltModules*,**/*_Factory*,**/*Hilt*,**/*ComposableSingletons*"
         )
     }
 }
