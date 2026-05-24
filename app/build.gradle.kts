@@ -18,7 +18,7 @@ plugins {
     alias(libs.plugins.hilt)
     alias(libs.plugins.google.services)
     jacoco
-    id("org.sonarqube") version "6.0.1.5171"
+
 }
 
 sonar {
