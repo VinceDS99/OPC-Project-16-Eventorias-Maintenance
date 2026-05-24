@@ -18,27 +18,6 @@ plugins {
     alias(libs.plugins.hilt)
     alias(libs.plugins.google.services)
     jacoco
-
-}
-
-sonar {
-    properties {
-        property("sonar.projectKey",   "VinceDS99_OPC-Project-16-Eventorias-Maintenance")
-        property("sonar.organization", "vinceds99")
-        property("sonar.host.url",     "https://sonarcloud.io")
-        property("sonar.sources",      "src/main/java")
-        property("sonar.tests",        "src/test/java,src/androidTest/java")
-        property(
-            "sonar.coverage.jacoco.xmlReportPaths",
-            "${project.projectDir}/app/build/reports/jacoco/jacocoTestReport/jacocoTestReport.xml"
-        )
-        property(
-            "sonar.exclusions",
-            "**/R.class,**/R\$*.class,**/BuildConfig.*,**/Manifest*.*," +
-                    "**/*_HiltModules*,**/*_Factory*,**/*Hilt*," +
-                    "**/*ComposableSingletons*"
-        )
-    }
 }
 
 android {
@@ -61,7 +40,6 @@ android {
     }
 
     signingConfigs {
-        // Ne crée la config release que si keystore.properties existe (local uniquement)
         val storeFilePath = keystoreProperties.getProperty("storeFile", "")
         if (storeFilePath.isNotEmpty()) {
             create("release") {
@@ -79,7 +57,6 @@ android {
         }
         release {
             isMinifyEnabled = true
-            // Utilise la config release si elle existe, sinon null (CI sans keystore)
             signingConfig = signingConfigs.findByName("release")
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
@@ -133,18 +110,18 @@ dependencies {
     implementation(libs.firebase.storage)
     implementation(libs.kotlinx.coroutines.play.services)
 
-    testImplementation("junit:junit:4.13.2")
-    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.10.1")
-    testImplementation("io.mockk:mockk:1.13.10")
+    testImplementation(libs.junit)
+    testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.mockk)
 
-    androidTestImplementation("androidx.test.ext:junit:1.2.1")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
+    androidTestImplementation(libs.junit.ext)
+    androidTestImplementation(libs.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
-    androidTestImplementation("androidx.compose.ui:ui-test-junit4")
-    debugImplementation("androidx.compose.ui:ui-test-manifest")
+    androidTestImplementation(libs.androidx.ui.test.junit4)
+    debugImplementation(libs.androidx.ui.test.manifest)
 
-    androidTestImplementation("com.google.dagger:hilt-android-testing:2.55")
-    kaptAndroidTest("com.google.dagger:hilt-android-compiler:2.55")
+    androidTestImplementation(libs.hilt.android.testing)
+    kaptAndroidTest(libs.hilt.compiler)
 }
 
 jacoco {
@@ -152,7 +129,8 @@ jacoco {
 }
 
 tasks.register<JacocoReport>("jacocoTestReport") {
-    // Dépend de l'exécution des tests unitaires debug
+    group = "verification"
+    description = "Generates JaCoCo code coverage report for debug unit tests"
     dependsOn("testDebugUnitTest")
 
     reports {
@@ -160,36 +138,21 @@ tasks.register<JacocoReport>("jacocoTestReport") {
         html.required.set(true)
     }
 
-    // Fichiers à exclure de la couverture (générés, non testables)
     val excludes = listOf(
-        "**/R.class",
-        "**/R$*.class",
-        "**/BuildConfig.*",
-        "**/Manifest*.*",
-        "**/*Test*.*",
-        "android/**/*.*",
-
-        // Hilt
-        "**/*_HiltModules*",
-        "**/*_Factory*",
-        "**/*_MembersInjector*",
-        "**/hilt_aggregated_deps/**",
-        "**/*Hilt*",
-
-        // Compose généré
-        "**/*ComposableSingletons*",
-        "**/*_Impl*"
+        "**/R.class", "**/R$*.class", "**/BuildConfig.*", "**/Manifest*.*",
+        "**/*Test*.*", "android/**/*.*",
+        "**/*_HiltModules*", "**/*_Factory*", "**/*_MembersInjector*",
+        "**/hilt_aggregated_deps/**", "**/*Hilt*",
+        "**/*ComposableSingletons*", "**/*_Impl*"
     )
 
-    // Classes Kotlin compilées
-    val debugTree = fileTree(
-        "${layout.buildDirectory.get()}/tmp/kotlin-classes/debug"
-    ) { exclude(excludes) }
+    val debugTree = fileTree("${layout.buildDirectory.get()}/tmp/kotlin-classes/debug") {
+        exclude(excludes)
+    }
 
     sourceDirectories.setFrom(files("${project.projectDir}/src/main/java"))
     classDirectories.setFrom(files(debugTree))
 
-    // Fichier d'exécution produit par testDebugUnitTest
     executionData.setFrom(
         fileTree(layout.buildDirectory.get()) {
             include(
