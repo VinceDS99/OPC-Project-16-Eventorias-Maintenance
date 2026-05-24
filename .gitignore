@@ -38,3 +38,6 @@ app/google-services.json
 
 # Clés locales
 local.properties
+
+# Signature
+keystore.properties

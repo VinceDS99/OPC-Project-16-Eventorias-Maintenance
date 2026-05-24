@@ -8,13 +8,11 @@
 
 ## Stack technique
 
-- Kotlin + Jetpack Compose
+* Kotlin + Jetpack Compose
+* Architecture MVVM
+* Firebase Authentication \& Firestore
+* Hilt (injection de dépendances)
 
-- Architecture MVVM
-
-- Firebase Authentication \& Firestore
-
-- Hilt (injection de dépendances)
 
 
 ## Utilisateur test
@@ -25,7 +23,3 @@ Test123456!
 Testuser2@hotmail.com
 John Doe
 Test123456!
-
-
-
-

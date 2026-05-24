@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.openclassrooms.eventorias.data.model.Event
 import com.openclassrooms.eventorias.data.repository.EventRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -54,9 +55,10 @@ class EventListViewModel @Inject constructor(
     private fun loadEvents() {
         viewModelScope.launch {
 
-            // Test écran d"erreur
+            // Test écran d'erreur
             //_uiState.value = EventListUiState.Error("Simulation d'erreur")
             //return@launch
+
 
             combine(
                 repository.getEvents(),
