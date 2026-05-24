@@ -40,16 +40,23 @@ jobs:
       - name: Unit tests + JaCoCo coverage
         run: ./gradlew testDebugUnitTest jacocoTestReport
 
-      # Tests instrumentés sur émulateur Android
+      # KVM
+      - name: Enable KVM
+        run: |
+            echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+            sudo udevadm control --reload-rules
+            sudo udevadm trigger --name-match=kvm
 
+
+      # Tests instrumentés sur émulateur Android
       - name: Instrumented tests
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          api-level: 31
+          api-level: 29
           arch: x86_64
-          target: google_apis
+          target: default
           disable-animations: true
-          emulator-options: -no-snapshot-save -noaudio -no-boot-anim -gpu swiftshader_indirect
+          emulator-options: -no-snapshot-save -noaudio -no-boot-anim
           script: ./gradlew connectedDebugAndroidTest
 
       # Analyse SonarCloud (lit SONAR_TOKEN depuis l'env automatiquement)
