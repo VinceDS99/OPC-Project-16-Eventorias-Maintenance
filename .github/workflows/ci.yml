@@ -41,11 +41,15 @@ jobs:
         run: ./gradlew testDebugUnitTest jacocoTestReport
 
       # Tests instrumentés sur émulateur Android
+
       - name: Instrumented tests
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          api-level: 29
+          api-level: 31
           arch: x86_64
+          target: google_apis
+          disable-animations: true
+          emulator-options: -no-snapshot-save -noaudio -no-boot-anim -gpu swiftshader_indirect
           script: ./gradlew connectedDebugAndroidTest
 
       # Analyse SonarCloud (lit SONAR_TOKEN depuis l'env automatiquement)
