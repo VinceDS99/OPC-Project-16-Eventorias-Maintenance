@@ -39,6 +39,9 @@ jobs:
           sudo udevadm control --reload-rules
           sudo udevadm trigger --name-match=kvm
 
+      - name: Install emulator dependencies
+        run: sudo apt-get install -y libpulse0
+
       - name: Instrumented tests
         uses: reactivecircus/android-emulator-runner@v2
         with:
