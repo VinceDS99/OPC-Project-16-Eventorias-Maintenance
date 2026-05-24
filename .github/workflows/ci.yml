@@ -6,7 +6,7 @@ on:
 
 jobs:
   ci:
-    runs-on: macos-13
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout
@@ -33,6 +33,13 @@ jobs:
       - name: Unit tests + JaCoCo coverage
         run: ./gradlew testDebugUnitTest jacocoTestReport
 
+      # Activation KVM obligatoire sur ubuntu pour l'émulateur Android
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+
       - name: Instrumented tests
         uses: reactivecircus/android-emulator-runner@v2
         with:
@@ -40,6 +47,7 @@ jobs:
           arch: x86_64
           target: default
           disable-animations: true
+          emulator-options: -no-snapshot-save -noaudio -no-boot-anim -gpu swiftshader_indirect
           script: ./gradlew connectedDebugAndroidTest
 
       - name: SonarCloud analysis
