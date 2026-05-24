@@ -49,7 +49,7 @@ jobs:
           arch: x86
           target: default
           disable-animations: true
-          emulator-options: -no-snapshot-save -noaudio -no-boot-anim
+          emulator-options: -no-snapshot-save -noaudio -no-boot-anim -gpu swiftshader_indirect
           script: ./gradlew connectedDebugAndroidTest
 
       - name: SonarCloud analysis
